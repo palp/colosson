@@ -1,0 +1,11 @@
+{
+    "name": "colosson",
+    "version": "0.0.1",
+    "description": "",
+    "main": "bot.js",
+    "author": "palp",
+    "dependencies": {
+        "bunyan": "^1.8.12",
+        "discord.io": "github:woor/discord.io#gateway_v6"
+    }
+}
