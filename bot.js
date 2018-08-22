@@ -52,8 +52,7 @@ bot.on('message', function (user, userId, channelId, message, evt) {
                     message: msg
                 });
     
-                boards[channelId] = { odds: { numberWang: getRandom(5, 25), board: getRandom(1, 5) } };  
-                log.info(boards[channelId])                  
+                boards[channelId] = { odds: { numberWang: getRandom(5, 25), board: getRandom(1, 5) } };                  
             }    
         }
     } else {
@@ -126,10 +125,9 @@ function checkNumberWang(number, channelId) {
         var message = "" + number + "! That's NumberWang!"; 
         var random = getRandom(1, board.odds.board);
         if (random == 1) {
-            message += "\nLet's rotate the board!"            
+            message += "\nLet's rotate the board!";
             boards[channelId].odds.numberWang = getRandom(5, 25);
-            boards[channelId].odds.board = getRandom(1, 5);
-            log.info("New board: " + boards[channelId]);
+            boards[channelId].odds.board = getRandom(1, 5);            
         }
 
         bot.sendMessage({
