@@ -9,7 +9,7 @@ var bot = new Discord.Client({
 })
 
 var numberWords = [
-    "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "twenty", "thirty", "forty", "fifty", "hundred", "thousand", "million", "billion", "trillion", "kajillion", "bazillion", "threve"
+    "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fifteen", "twenty", "thirty", "forty", "fifty", "hundred", "thousand", "million", "billion", "trillion", "kajillion", "bazillion", "threve"
 ];
 
 var wordRegex = new RegExp(numberWords.join("|"));
@@ -24,9 +24,10 @@ bot.on('ready', function (evt) {
 });
 
 bot.on('message', function (user, userId, channelId, message, evt) {
+    log.info(message);
     if (userId == bot.id)
-        return;                
-                
+        return;                    
+    /*            
     if (boards[channelId] == undefined) {
         log.debug(message);
         if (history[channelId] == undefined)
@@ -47,15 +48,26 @@ bot.on('message', function (user, userId, channelId, message, evt) {
                 msg = "It's time for NumberWang!\n";
                 msg += makeIntro(preBoards[channelId].user, loc, null, word, null) + ".\n";
                 msg += makeIntro(userId, loc, loc2, word, word2)
-                bot.sendMessage({
-                    to: channelId,
-                    message: msg
-                });
-    
-                boards[channelId] = { odds: { numberWang: getRandom(5, 25), board: getRandom(1, 5) } };                  
+                
+                if (channelId == mainChannel) {
+                    bot.sendMessage({
+                        to: channelId,
+                        message: msg
+                    });    
+                    boards[channelId] = { odds: { numberWang: getRandom(1, 20), board: getRandom(1, 6) } };
+                } else {
+                    boards[channelId] = { odds: { numberWang: getRandom(5, 25), board: getRandom(1, 10) } };
+                }
+
             }    
         }
-    } else {
+    } else { */
+
+
+        if (boards[channelId] == undefined) {
+            boards[channelId] = { odds: { numberWang: getRandom(5, 25), board: getRandom(1, 10) } };
+        }
+
         var words = message.split(' ');    
         for (var i = 0; i < words.length; i++) {
             var word = words[i];
@@ -66,7 +78,7 @@ bot.on('message', function (user, userId, channelId, message, evt) {
                 }                        
             }    
         }    
-    }    
+    //}    
 });
 
 function getRandom(min, max) {
@@ -121,13 +133,13 @@ function makeIntro(userId, loc, loc2, word, word2) {
 function checkNumberWang(number, channelId) {    
     var board = boards[channelId];    
     var random = getRandom(1, board.odds.numberWang)    
-    if (random == 1) {     
+    if (random == 1 || number == "<a:jerkheads:482774936847384577>") {     
         var message = "" + number + "! That's NumberWang!"; 
         var random = getRandom(1, board.odds.board);
         if (random == 1) {
             message += "\nLet's rotate the board!";
-            boards[channelId].odds.numberWang = getRandom(5, 25);
-            boards[channelId].odds.board = getRandom(1, 5);            
+            board.odds.numberWang = getRandom(5, 25);
+            board.odds.board = getRandom(1, 5);            
         }
 
         bot.sendMessage({
@@ -136,6 +148,9 @@ function checkNumberWang(number, channelId) {
         })        
 
         return true;
+    } else {
+        if (getRandom(1, 4) == 1 && board.odds.numberWang > 5)
+            board.odds.numberWang -= 1;
     }
 
     return false;
